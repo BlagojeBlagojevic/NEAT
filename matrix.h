@@ -80,12 +80,12 @@ Mat matrix_alloc(size_t rows, size_t cols) {
 	return m;
 	}
 
-void matrix_free(Mat m){
-	
-	free(m.elem);
-}	
+void matrix_free(Mat m) {
 
-	
+	free(m.elem);
+	}
+
+
 void matrix_dot(Mat dest, Mat a, Mat b) { //a[1x2] b[2x3] c[1x3]
 	MATRIX_ASSERT(a.cols == b.rows);
 	MATRIX_ASSERT(dest.rows == a.rows);
@@ -145,8 +145,9 @@ void matrix_print_out(Mat m, const char *name, size_t out) {
 	for(size_t y = 0; y < m.rows; y++) {
 		for(size_t x = 0; x < m.cols; x++) {
 			printf(" %.2f ", (float)MATRIX_SHIFT(m,y,x));
-			if(x==out)
-	          {break;}
+			if(x==out) {
+				break;
+				}
 			}
 		printf("\n\n");
 		}
@@ -175,7 +176,7 @@ void matrix_activation(Mat m) {
 	for(size_t y = 0; y < m.rows; y++)
 		for(size_t x = 0; x < m.cols; x++)
 			MATRIX_SHIFT(m,y,x) = sigmoid(MATRIX_SHIFT(m,y,x));
-			//MATRIX_SHIFT(m,y,x) = tanh(MATRIX_SHIFT(m,y,x));
+	//MATRIX_SHIFT(m,y,x) = tanh(MATRIX_SHIFT(m,y,x));
 
 	}
 
@@ -196,61 +197,63 @@ void matrix_feedforward(Mat *out,Mat input, Mat *weights, Mat *bias,size_t num_o
 		}
 	}
 //*/
-void matrix_softmax(Mat m){
+void matrix_softmax(Mat m) {
 	double sum = 0;
-	for(size_t y = 0;y < m.rows;y++){
-		for(size_t x = 0;x < m.cols;x++){
+	for(size_t y = 0; y < m.rows; y++) {
+		for(size_t x = 0; x < m.cols; x++) {
 			sum+=expf(MATRIX_SHIFT(m,y,x));
+			}
 		}
-	}
 	//printf("sum = %f",sum);
 	//system("pause");
-	for(size_t y = 0;y < m.rows;y++){
-		for(size_t x = 0;x < m.cols;x++){
+	for(size_t y = 0; y < m.rows; y++) {
+		for(size_t x = 0; x < m.cols; x++) {
 			MATRIX_SHIFT(m,y,x) = expf(MATRIX_SHIFT(m,y,x))/sum;
+			}
 		}
 	}
-}
-void matrix_copy(Mat dest, Mat src){
+void matrix_copy(Mat dest, Mat src) {
 	//MATRIX_ASSERT();
-	for(size_t y = 0; y < dest.rows;y++){
-		for(size_t x = 0; x < dest.cols;x++){
+	for(size_t y = 0; y < dest.rows; y++) {
+		for(size_t x = 0; x < dest.cols; x++) {
 			MATRIX_SHIFT(dest,y,x) = MATRIX_SHIFT(src,y,x);
-	}
-}
-}
-void matrix_mutation(Mat m){
-	for(size_t y = 0; y < m.rows; y++){
-		for(size_t x = 0; x < m.cols; x++){
-		if(rand_float() < MUTATION_RATE){
-			if(rand()%2==0)
-			{MATRIX_SHIFT(m,y,x)+=LR*rand_float();}
-			else
-			{MATRIX_SHIFT(m,y,x)-=LR*rand_float();}
-			
-		}
+			}
 		}
 	}
-}
-void matrix_reproduce(Mat a, Mat b){
+void matrix_mutation(Mat m) {
+	for(size_t y = 0; y < m.rows; y++) {
+		for(size_t x = 0; x < m.cols; x++) {
+			if(rand_float() < MUTATION_RATE) {
+				if(rand()%2==0) {
+					MATRIX_SHIFT(m,y,x)+=LR*rand_float();
+					}
+				else {
+					MATRIX_SHIFT(m,y,x)-=LR*rand_float();
+					}
+
+				}
+			}
+		}
+	}
+void matrix_reproduce(Mat a, Mat b) {
 	MATRIX_ASSERT(a.rows == b.rows);
 	MATRIX_ASSERT(a.cols == b.cols);
-	for(size_t y = 0; y < a.rows;y++){
-		for(size_t x = 0; x < a.cols;x++){
-		 int desi = rand()%2;
-		 if(desi == 0){
-		 	MATRIX_SHIFT(a,y,x) = MATRIX_SHIFT(b,y,x); 
-	
-		 }
-		 if(desi == 1){
-		 	//MATRIX_SHIFT(b,y,x) = MATRIX_SHIFT(a,y,x);
-		 }
-		
-		 
+	for(size_t y = 0; y < a.rows; y++) {
+		for(size_t x = 0; x < a.cols; x++) {
+			int desi = rand()%2;
+			if(desi == 0) {
+				MATRIX_SHIFT(a,y,x) = MATRIX_SHIFT(b,y,x);
+
+				}
+			if(desi == 1) {
+				//MATRIX_SHIFT(b,y,x) = MATRIX_SHIFT(a,y,x);
+				}
+
+
+			}
+		}
+	matrix_mutation(a);
+// matrix_mutation(b);
 	}
-}
-  matrix_mutation(a);
- // matrix_mutation(b);
-}
 
 #endif  //MATRIX_IMPLEMENTATION
