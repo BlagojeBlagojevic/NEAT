@@ -36,7 +36,7 @@ int main(){
 				 
 	    	 neat_forward(&n[j],1);	
 	    	 err += ((float)out - n[j].out[NUMBER_OF_LAYER - 1].elem[0])
-				 						* ((float)out - n[j].out[NUMBER_OF_LAYER - 1].elem[0]); 
+			* ((float)out - n[j].out[NUMBER_OF_LAYER - 1].elem[0]); 
 				 						//printf("out %d, %f\n",out, err);
 				}
 			}
