@@ -1,4 +1,4 @@
-#define NUMBER_OF_SPICES 100
+#define NUMBER_OF_SPICES 5000
 #define LR 0.6
 #define MUTATION_RATE 0.9
 #define NUMBER_OF_LAYER 2
@@ -32,7 +32,7 @@ int main(){
 	    	for(int x = 0;x < 2;x++){
 	    	 n[j].input.elem[0] = x;
 				 n[j].input.elem[1] = y;				 
-				 uint32_t out = (x|y);
+				 uint32_t out = (x^y);
 				 
 	    	 neat_forward(&n[j],1);	
 	    	 err += ((float)out - n[j].out[NUMBER_OF_LAYER - 1].elem[0])
