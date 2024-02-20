@@ -15,9 +15,9 @@ int main(){
 
 	static NEAT n[NUMBER_OF_SPICES];  //MACRO EXTENDED
 	//system("pause");
-	static NEAT n1[NUMBER_OF_SPICES];
+	//static NEAT n1[NUMBER_OF_SPICES];
 	neat_alloc(n);
-	neat_alloc(n1);
+	//neat_alloc(n1);
 	
 	srand(time(0));
 	neat_rand(n,-30,30);
@@ -48,7 +48,7 @@ int main(){
 			n[j].fitnes = sqrt((err))*400;
 		}
 	
-		neat_crossover(n,n1);
+		neat_crossover(n);
 		
 		printf("GEN %lld fitnes = %f\n ",counter,n[0].fitnes);
 		
