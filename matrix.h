@@ -22,7 +22,9 @@
 #define TYPE float
 #endif
 
-
+#ifndef MATRIX_ACTIVATION_DEFAULT_DISABLE
+#define MATRIX_ACTIVATION_SIGMOID
+#endif
 
 typedef struct {
 	size_t rows;    //NUM OF   ROWS
@@ -174,10 +176,23 @@ void matrix_activation_cols(Mat m,size_t num) {
 void matrix_activation(Mat m) {
 
 	for(size_t y = 0; y < m.rows; y++)
-		for(size_t x = 0; x < m.cols; x++)
-			MATRIX_SHIFT(m,y,x) = sigmoid(MATRIX_SHIFT(m,y,x));
-	//MATRIX_SHIFT(m,y,x) = tanh(MATRIX_SHIFT(m,y,x));
-
+		for(size_t x = 0; x < m.cols; x++){
+			#ifdef MATRIX_ACTIVATION_SIGMOID
+				MATRIX_SHIFT(m,y,x) = sigmoid(MATRIX_SHIFT(m,y,x));
+			#endif
+			#ifdef MATRIX_ACTIVATION_TANH
+	  		MATRIX_SHIFT(m,y,x) = tanh(MATRIX_SHIFT(m,y,x));
+      #endif
+      #ifdef MATRIX_ACTIVATION_RELU
+				if(MATRIX_SHIFT(m,y,x) < 0)  MATRIX_SHIFT(m,y,x)  = 0;
+			#endif
+			#ifdef MATRIX_ACTIVATION_LRELU
+				if(MATRIX_SHIFT(m,y,x) < 0)  MATRIX_SHIFT(m,y,x)  = -0.01*MATRIX_SHIFT(m,y,x);
+			#endif
+			
+		}
+			
+			
 	}
 
 //REWRITE IN ONE LOOP
