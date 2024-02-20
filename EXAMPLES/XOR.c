@@ -1,12 +1,15 @@
 #define NUMBER_OF_SPICES 5000
-#define LR 0.6
+#define LR 0.1
 #define MUTATION_RATE 0.9
-#define NUMBER_OF_LAYER 2
-#define NUMBER_OF_NEURON 2
+#define NUMBER_OF_LAYER 3
+#define NUMBER_OF_NEURON 10
 #define NINPUTS 2
 #define NOUT 1
 #define NEAT_IMPLEMETATION
+#define MATRIX_ACTIVATION_DEFAULT_DISABLE
+#define MATRIX_ACTIVATION_SIGMOID
 #include "neat.h"
+#include<math.h>
 
 int main(){
 
