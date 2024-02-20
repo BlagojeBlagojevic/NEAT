@@ -14,9 +14,9 @@ int main() {
 
 	static NEAT n[NUMBER_OF_SPICES];  //MACRO EXTENDED
 	//system("pause");
-	static NEAT n1[NUMBER_OF_SPICES];
+	//static NEAT n1[NUMBER_OF_SPICES];
 	neat_alloc(n);
-	neat_alloc(n1);
+	//neat_alloc(n1);
 
 	srand(time(0));
 	  
@@ -36,7 +36,7 @@ int main() {
 		n[j].fitnes = sqrt(error) / 90;
 		error = 0.0f;
 		}
-		neat_crossover(n,n1);
+		neat_crossover(n);
 		printf("best fit GEN %d is %f\n",counter,n[0].fitnes);
 	}
 	while(1){
