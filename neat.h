@@ -36,7 +36,6 @@ typedef struct {
 	Mat bias[NUMBER_OF_LAYER];
 	Mat out[NUMBER_OF_LAYER];
 	Mat out_softmax;
-
 	} NEAT;
 
 void neat_alloc(NEAT *n);
@@ -47,7 +46,8 @@ void neat_print(NEAT *n);
 void neat_crossover(NEAT *n);
 void neat_mutation(NEAT *n);
 void neat_reproduce(NEAT *n1,NEAT *n2);
-
+void neat_save(NEAT *n,const char *name);
+void neat_load(NEAT *n,const char *name);
 
 #endif
 
@@ -56,7 +56,6 @@ void neat_alloc(NEAT *n) {
 
 	//*n = (NEAT*)calloc(NUMBER_OF_SPICES, sizeof(NEAT*));
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
-		n[i].fitnes = 10;
 		n[i].input       = matrix_alloc(1,NINPUTS);
 		n[i].weigts[0]   = matrix_alloc(NINPUTS,NUMBER_OF_NEURON);
 		n[i].bias[0]	   = matrix_alloc(1,NUMBER_OF_NEURON);
@@ -185,17 +184,56 @@ void neat_crossover(NEAT *n) {
 		//int s1 = rand()%(NUMBER_OF_SPICES / 10);
 		if(rand_float() < 0.1)
 			neat_reproduce(&n[i],&n[0]);
-		else{
+		else {
 			int s2 = rand()%(NUMBER_OF_SPICES / 10);
-			neat_reproduce(&n[i],&n[s2]);	
-		}
-		
+			neat_reproduce(&n[i],&n[s2]);
+			}
+
 		//neat_reproduce(&n[s2],&n[0]);
 		}
-	  //memcpy(&n[NUMBER_OF_SPICES - 1],&n1[0],sizeof(n1[0]));
+	//memcpy(&n[NUMBER_OF_SPICES - 1],&n1[0],sizeof(n1[0]));
 
 
 	}
+
+void neat_save(NEAT *n,const char *name) {
+	FILE *f = fopen(name,"wb");
+
+
+	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
+		fwrite(n[i].input.elem,sizeof(float),n[i].input.cols*n[i].input.rows,f);
+		//system("pause");
+		for(size_t j = 0; j < NUMBER_OF_LAYER; j++) {
+			fwrite(n[i].weigts[j].elem,sizeof(float),n[i].weigts[j].cols*n[i].weigts[j].rows,f);
+			fwrite(n[i].bias[j].elem,sizeof(float),n[i].bias[j].cols*n[i].bias[j].rows,f);
+			//fwrite(n[i].bias[j].elem,sizeof(float),n[i].bias[j].cols*n[i].bias.rows,f);
+			}
+		}
+	fclose(f);
+
+	}
+
+
+void neat_load(NEAT *n,const char *name) {
+
+
+	FILE *f = fopen(name,"rb");
+
+
+	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
+		fread(n[i].input.elem,sizeof(float),n[i].input.cols*n[i].input.rows,f);
+		//system("pause");
+		for(size_t j = 0; j < NUMBER_OF_LAYER; j++) {
+			fread(n[i].weigts[j].elem,sizeof(float),n[i].weigts[j].cols*n[i].weigts[j].rows,f);
+			fread(n[i].bias[j].elem,sizeof(float),n[i].bias[j].cols*n[i].bias[j].rows,f);
+			//fwrite(n[i].bias[j].elem,sizeof(float),n[i].bias[j].cols*n[i].bias.rows,f);
+			}
+		}
+	fclose(f);
+	}
+
+
+
 
 #endif
 
