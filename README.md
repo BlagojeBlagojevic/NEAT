@@ -42,6 +42,8 @@ The `neat.h` header file contains the definition and implementation of the NEAT 
 - `void neat_mutation(NEAT *n)`: Applies mutation to NEAT structures.
 - `void neat_reproduce(NEAT *n1, NEAT *n2)`: Performs reproduction between two NEAT structures.
 - `void neat_crossover(NEAT *n)`: Performs crossover between NEAT structures.
+- `void neat_save(NEAT *n,const char *name)`: Save neat.
+- `void neat_load(NEAT *n,const char *name)`: Load neat.
 
 ## Configuration Constants
 - `NUMBER_OF_SPICES`: Number of individual neural networks in the population.
