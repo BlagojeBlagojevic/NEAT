@@ -96,6 +96,11 @@ int main() {
 }
 ```
 
+## Useful links
+1. https://en.wikipedia.org/wiki/Neuroevolution_of_augmenting_topologies
+2. https://neat-python.readthedocs.io/en/latest/neat_overview.html
+3. https://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf
+
 ## Credits
 This implementation is based on the NEAT algorithm developed by Kenneth O. Stanley and Risto Miikkulainen.
 
