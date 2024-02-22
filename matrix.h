@@ -114,7 +114,7 @@ void matrix_sum(Mat dest, Mat a) {
 		}
 
 	}
-void matrix_rand(Mat dest, float high,float low) {
+void matrix_rand(Mat dest,float low, float high){
 	for(size_t y = 0; y < dest.rows; y++) {
 		for(size_t x = 0; x < dest.cols; x++) {
 			MATRIX_SHIFT(dest,y,x) = (TYPE)((rand_float()*(high - low)) + low);   //IN RANGE
