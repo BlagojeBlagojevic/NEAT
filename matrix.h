@@ -260,9 +260,6 @@ void matrix_reproduce(Mat a, Mat b) {
 				MATRIX_SHIFT(a,y,x) = MATRIX_SHIFT(b,y,x);
 
 				}
-			if(desi == 1) {
-				//MATRIX_SHIFT(b,y,x) = MATRIX_SHIFT(a,y,x);
-				}
 
 
 			}
