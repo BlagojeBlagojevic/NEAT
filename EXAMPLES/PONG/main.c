@@ -264,8 +264,31 @@ int main(void) {
 	srand(9999);
 	Pong_Init(Pong);
 	neat_alloc(population);
-	//neat_rand(population,-3,3);
-	neat_load(population,"pong.bin");
+	printf("Do you want to load model(y - YES)\n>");
+	char choice,name[30];	
+	int Niter;
+	char choice1;
+	scanf("%c",&choice);
+	if(choice == 'y'){
+		printf("Name of model\n>");
+		scanf("%s",name);
+		neat_load(population,name);	
+		choice = 'n';
+	}
+	else{
+		neat_rand(population,-3,3);	
+	}
+	//system("pause");
+	fflush(stdin);
+	printf("Do you want to save model(y - YES)\n>");
+	scanf("%c",&choice1);
+	if(choice1 == 'y'){
+		printf("How mutch iteration till save\n>");
+		scanf("%d",&Niter);
+		printf("Name of saved file\n>");
+		scanf("%s",name);
+		
+	}
 	Neat_Reset_Fitnes();
 	size_t counter = 1;
 
@@ -273,20 +296,18 @@ int main(void) {
 
 		SDL_Event event;
 		if(SDL_PollEvent(&event)) {
-
+			if(event.type == SDL_QUIT){
+				return 0;
 			}
-		//if(counter % 10 == 0) {
+			}
 			Main_Renderer(renderer,Pong,10);
 			
 			//SDL_Delay(10);
-			//}
+		
 
 		Check_Colision_Pack(Pong);
 		Update_Ball(Pong);
 		Update_Pack(Pong);
-		//SDL_Delay(10);
-		//printf("Curently allive %ld\n",curently_alive);
-		//counter++;
 		if(curently_alive == 0) {
 			counter++;
 			for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
@@ -296,11 +317,10 @@ int main(void) {
 			neat_crossover(population);
 			printf("BEST FITNES IS %f\n",population[0].fitnes);
 			Neat_Reset_Fitnes();
-			if(counter == 11){
-				neat_save(population,"pong.bin");
-				counter = 0;
+			if((counter % (Niter + 1) == 0) && (choice1 == 'y')){
+				neat_save(population,name);
+			
 			}
-			//counter = 0;
 			}
 
 
