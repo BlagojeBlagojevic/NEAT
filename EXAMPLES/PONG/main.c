@@ -132,7 +132,7 @@ void Check_Colision_Pack(PONG *p) {
 					//p[i].ball_speed.y *=-1;
 					p[i].ball_speed.x *= -1;
 					p[i].ball_speed.y = rand_0Or1();
-					//population[i].fitnes -= 10000; //If Hit Pack Decress
+					population[i].fitnes -= 10000; //If Hit Pack Decress
 					}
 				else {
 					p[i].ball.x = width  / 2;
