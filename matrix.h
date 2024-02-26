@@ -64,6 +64,8 @@ static inline void matrix_print_out(Mat m, const char *name, size_t out);
 
 
 static inline void matrix_mutation(Mat m);
+static inline void matrix_mutation_enable(Mat m, float DM);
+static inline void matrix_mutation_disable(Mat m,float EM);
 
 #endif  //MATRIX_H
 
@@ -114,7 +116,7 @@ static inline void matrix_sum(Mat dest, Mat a) {
 		}
 
 	}
-static inline void matrix_rand(Mat dest,float low, float high){
+static inline void matrix_rand(Mat dest,float low, float high) {
 	for(size_t y = 0; y < dest.rows; y++) {
 		for(size_t x = 0; x < dest.cols; x++) {
 			MATRIX_SHIFT(dest,y,x) = (TYPE)((rand_float()*(high - low)) + low);   //IN RANGE
@@ -176,23 +178,23 @@ static inline void matrix_activation_cols(Mat m,size_t num) {
 static inline void matrix_activation(Mat m) {
 
 	for(size_t y = 0; y < m.rows; y++)
-		for(size_t x = 0; x < m.cols; x++){
-			#ifdef MATRIX_ACTIVATION_SIGMOID
-				MATRIX_SHIFT(m,y,x) = sigmoid(MATRIX_SHIFT(m,y,x));
-			#endif
-			#ifdef MATRIX_ACTIVATION_TANH
-	  		MATRIX_SHIFT(m,y,x) = tanh(MATRIX_SHIFT(m,y,x));
-      #endif
-      #ifdef MATRIX_ACTIVATION_RELU
-				if(MATRIX_SHIFT(m,y,x) < 0)  MATRIX_SHIFT(m,y,x)  = 0;
-			#endif
-			#ifdef MATRIX_ACTIVATION_LRELU
-				if(MATRIX_SHIFT(m,y,x) < 0)  MATRIX_SHIFT(m,y,x)  = -0.01*MATRIX_SHIFT(m,y,x);
-			#endif
-			
-		}
-			
-			
+		for(size_t x = 0; x < m.cols; x++) {
+#ifdef MATRIX_ACTIVATION_SIGMOID
+			MATRIX_SHIFT(m,y,x) = sigmoid(MATRIX_SHIFT(m,y,x));
+#endif
+#ifdef MATRIX_ACTIVATION_TANH
+			MATRIX_SHIFT(m,y,x) = tanh(MATRIX_SHIFT(m,y,x));
+#endif
+#ifdef MATRIX_ACTIVATION_RELU
+			if(MATRIX_SHIFT(m,y,x) < 0)  MATRIX_SHIFT(m,y,x)  = 0;
+#endif
+#ifdef MATRIX_ACTIVATION_LRELU
+			if(MATRIX_SHIFT(m,y,x) < 0)  MATRIX_SHIFT(m,y,x)  = -0.01*MATRIX_SHIFT(m,y,x);
+#endif
+
+			}
+
+
 	}
 
 //REWRITE IN ONE LOOP
@@ -250,6 +252,36 @@ static inline void matrix_mutation(Mat m) {
 			}
 		}
 	}
+
+
+static inline void matrix_mutation_disable(Mat m,float DM) {
+	for(size_t y = 0; y < m.rows; y++) {
+		for(size_t x = 0; x < m.cols; x++) {
+			if(rand_float() < MUTATION_RATE) {
+				if(rand_float() < DM) {
+
+					MATRIX_SHIFT(m,y,x) = 0.0f;
+					}
+				}
+			}
+		}
+	}
+
+
+static inline void matrix_mutation_enable(Mat m, float EM) {
+	for(size_t y = 0; y < m.rows; y++) {
+		for(size_t x = 0; x < m.cols; x++) {
+			if(rand_float() < MUTATION_RATE) {
+				if(rand_float() < EM) {
+					MATRIX_SHIFT(m,y,x) = rand_float()*2.0f - 1.0f;
+					}
+				}
+			}
+		}
+	}
+
+
+
 static inline void matrix_reproduce(Mat a, Mat b) {
 	MATRIX_ASSERT(a.rows == b.rows);
 	MATRIX_ASSERT(a.cols == b.cols);
@@ -260,12 +292,16 @@ static inline void matrix_reproduce(Mat a, Mat b) {
 				MATRIX_SHIFT(a,y,x) = MATRIX_SHIFT(b,y,x);
 
 				}
-
-
 			}
 		}
 	matrix_mutation(a);
-// matrix_mutation(b);
+#ifdef DISABLE_MUTATION
+	matrix_mutation_disable(a, DISABLE_MUTATION);
+#endif
+#ifdef ENABLE_MUTATION
+	matrix_mutation_enable(a, ENABLE_MUTATION);
+#endif
+
 	}
 
 #endif  //MATRIX_IMPLEMENTATION
