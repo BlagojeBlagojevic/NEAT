@@ -59,7 +59,7 @@ static inline void neat_load(NEAT *n,const char *name);
 static inline void neat_alloc(NEAT *n) {
 
 	//*n = (NEAT*)calloc(NUMBER_OF_SPICES, sizeof(NEAT*));
-	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {	
+	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		n[i].input       = matrix_alloc(1,NINPUTS);
 		n[i].weigts[0]   = matrix_alloc(NINPUTS,NUMBER_OF_NEURON);
 		n[i].bias[0]	   = matrix_alloc(1,NUMBER_OF_NEURON);
@@ -71,7 +71,7 @@ static inline void neat_alloc(NEAT *n) {
 			n[i].weigts[j]  = matrix_alloc(NUMBER_OF_NEURON,NUMBER_OF_NEURON);
 			n[i].bias[j]    = matrix_alloc(1,NUMBER_OF_NEURON);
 			n[i].out[j]     = matrix_alloc(1,NUMBER_OF_NEURON);
-						}
+			}
 		//Widjeti kako
 		//n[i].weigts[NUMBER_OF_LAYER - 1]  = matrix_alloc(NOUT,NUMBER_OF_NEURON);
 		//n[i].bias[NUMBER_OF_LAYER - 1]    = matrix_alloc(1,NOUT);
@@ -117,7 +117,7 @@ static inline void neat_forward(NEAT *n,size_t Niter) {
 		//system("pause");
 		matrix_feedforward(n[i].out,n[i].input,n[i].weigts,n[i].bias,NUMBER_OF_LAYER);
 		matrix_copy(n[i].out_softmax,n[i].out[NUMBER_OF_LAYER-1]);
-		matrix_softmax(n[i].out_softmax);
+		//matrix_softmax(n[i].out_softmax);
 		//matrix_print_out(n[i].out_softmax,"out_SOFTMAX",NOUT);
 		//matrix_print_out(n[i].out[NUMBER_OF_LAYER - 1],"OUT",NOUT);
 		//system("pause");
@@ -188,20 +188,19 @@ static inline void neat_crossover(NEAT *n) {
 		//int s1 = rand()%(NUMBER_OF_SPICES / 10);
 		if(rand_float() < 0.1)
 			neat_reproduce(&n[i],&n[0]);
-		else{
+		else {
 			int s2 = rand()%(NUMBER_OF_SPICES_IN_CROSOWER);
-			neat_reproduce(&n[i],&n[s2]);	
-		}
-		
+			neat_reproduce(&n[i],&n[s2]);
+			}
+
 		//neat_reproduce(&n[s2],&n[0]);
 		}
-	  //memcpy(&n[NUMBER_OF_SPICES - 1],&n1[0],sizeof(n1[0]));
+	//memcpy(&n[NUMBER_OF_SPICES - 1],&n1[0],sizeof(n1[0]));
 
 
 	}
 
-static inline void neat_save(NEAT *n,const char *name)
-{
+static inline void neat_save(NEAT *n,const char *name) {
 	FILE *f = fopen(name,"wb");
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		fwrite(n[i].input.elem,sizeof(float),n[i].input.cols*n[i].input.rows,f);
@@ -217,8 +216,7 @@ static inline void neat_save(NEAT *n,const char *name)
 	}
 
 
-static inline void neat_load(NEAT *n,const char *name)
-{
+static inline void neat_load(NEAT *n,const char *name) {
 	FILE *f = fopen(name,"rb");
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		fread(n[i].input.elem,sizeof(float),n[i].input.cols*n[i].input.rows,f);
@@ -230,6 +228,6 @@ static inline void neat_load(NEAT *n,const char *name)
 			}
 		}
 	fclose(f);
-}
+	}
 
 #endif
