@@ -26,7 +26,7 @@
 
 
 #define NUMBER_OF_SPICES 20
-#define NUMBER_OF_SPICES_IN_CROSOWER 1
+#define NUMBER_OF_SPICES_IN_CROSOWER 3
 #define LR 0.2
 #define MUTATION_RATE 0.6
 #define NUMBER_OF_LAYER 3
@@ -36,7 +36,9 @@
 #define NEAT_IMPLEMETATION
 #define MATRIX_ACTIVATION_DEFAULT_DISABLE
 #define MATRIX_ACTIVATION_TANH
+#define DISABLE_MUTATION 0.01
 #include "neat.h"
+
 size_t curently_alive  = NUMBER_OF_SPICES;   //Must be equal to NUMBER_OF_SPICES
 NEAT population[NUMBER_OF_SPICES];
 typedef struct {
@@ -174,8 +176,7 @@ static inline void Update_Pack(PONG *p) {
 			population[i].input.elem[1] = (float)p[i].left.x;
 			population[i].input.elem[2] = (float)p[i].ball.x;
 			population[i].input.elem[3] = (float)p[i].ball.y;
-			population[i].input.elem[4] = p[i].ball_speed.y;
-			population[i].input.elem[5] = p[i].ball_speed.x;
+			population[i].input.elem[4] = (float)p[i].ball_speed.y;
 			//population[i].input.elem[6] = sqrt((p[i].left.y- p[i].ball.y)*(p[i].left.y- p[i].ball.y)+(p[i].left.x- p[i].ball.x)*(p[i].left.x - p[i].ball.x));
 
 			}
@@ -186,11 +187,17 @@ static inline void Update_Pack(PONG *p) {
 				if(p[i].left.y <= height - p[i].left.h) {
 					p[i].left.y += 1;
 					}
+				else {
+					population[i].fitnes++;
+					}
 				}
 
 			else {
 				if(p[i].left.y >= 0) {
 					p[i].left.y -= 1;
+					}
+				else {
+					population[i].fitnes++;
 					}
 
 				}
@@ -202,8 +209,8 @@ static inline void Update_Pack(PONG *p) {
 			population[i].input.elem[1] = (float)p[i].right.x;
 			population[i].input.elem[2] = (float)p[i].ball.x;
 			population[i].input.elem[3] = (float)p[i].ball.y;
-			population[i].input.elem[4] = p[i].ball_speed.y;
-			population[i].input.elem[5] = p[i].ball_speed.x;
+			population[i].input.elem[4] = (float)p[i].ball_speed.y;
+			population[i].input.elem[5] = (float)p[i].ball_speed.x;
 			//population[i].input.elem[6] = sqrt(p[i].right.y*p[i].right.y+p[i].right.x*p[i].right.x);
 			//population[i].input.elem[6] = sqrt((p[i].right.y- p[i].ball.y)*(p[i].right.y- p[i].ball.y)+(p[i].right.x- p[i].ball.x)*(p[i].right.x - p[i].ball.x));
 			}
@@ -326,8 +333,6 @@ int main(void) {
 
 				}
 			}
-
-
 		}
 
 	system("pause");
