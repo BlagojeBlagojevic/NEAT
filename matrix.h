@@ -34,25 +34,25 @@ typedef struct {
 	} Mat;
 
 //UTILITY FUNCTION
-float rand_float(void);
-float sigmoid(float x);
+static inline float rand_float(void);
+static inline float sigmoid(float x);
 
 //MATRIX OPERATION
 Mat  matrix_alloc(size_t rows, size_t cols);
-void matrix_free(Mat m);
+static inline void matrix_free(Mat m);
 
-void matrix_dot(Mat dest, Mat a, Mat b);
-void matrix_sum(Mat dest, Mat a);
-void matrix_rand(Mat dest,float low, float high);
-void matrix_activation(Mat m);
-void matrix_activation_cols(Mat m,size_t num);
-void matrix_feedforward(Mat *out,Mat input, Mat *weights, Mat *bias, size_t num_of_layer);
-void matrix_reproduce(Mat a, Mat b);
-void matrix_softmax(Mat m);
-void matrix_copy(Mat dest, Mat src);
+static inline void matrix_dot(Mat dest, Mat a, Mat b);
+static inline void matrix_sum(Mat dest, Mat a);
+static inline void matrix_rand(Mat dest,float low, float high);
+static inline void matrix_activation(Mat m);
+static inline void matrix_activation_cols(Mat m,size_t num);
+static inline void matrix_feedforward(Mat *out,Mat input, Mat *weights, Mat *bias, size_t num_of_layer);
+static inline void matrix_reproduce(Mat a, Mat b);
+static inline void matrix_softmax(Mat m);
+static inline void matrix_copy(Mat dest, Mat src);
 
-void matrix_print(Mat m,const char *name);
-void matrix_print_out(Mat m, const char *name, size_t out);
+static inline void matrix_print(Mat m,const char *name);
+static inline void matrix_print_out(Mat m, const char *name, size_t out);
 #define MATRIX_PRINT(m) matrix_print((m), #m)
 
 #ifndef LR
@@ -63,13 +63,13 @@ void matrix_print_out(Mat m, const char *name, size_t out);
 #endif
 
 
-void matrix_mutation(Mat m);
+static inline void matrix_mutation(Mat m);
 
 #endif  //MATRIX_H
 
 
 #ifdef MATRIX_IMPLEMETATION
-float rand_float(void) {
+static inline float rand_float(void) {
 	return (float)rand() / (float)RAND_MAX;
 	}
 
@@ -82,13 +82,13 @@ Mat matrix_alloc(size_t rows, size_t cols) {
 	return m;
 	}
 
-void matrix_free(Mat m) {
+static inline void matrix_free(Mat m) {
 
 	free(m.elem);
 	}
 
 
-void matrix_dot(Mat dest, Mat a, Mat b) { //a[1x2] b[2x3] c[1x3]
+static inline void matrix_dot(Mat dest, Mat a, Mat b) { //a[1x2] b[2x3] c[1x3]
 	MATRIX_ASSERT(a.cols == b.rows);
 	MATRIX_ASSERT(dest.rows == a.rows);
 	MATRIX_ASSERT(dest.cols == b.cols);
@@ -103,7 +103,7 @@ void matrix_dot(Mat dest, Mat a, Mat b) { //a[1x2] b[2x3] c[1x3]
 		}
 
 	}
-void matrix_sum(Mat dest, Mat a) {
+static inline void matrix_sum(Mat dest, Mat a) {
 	MATRIX_ASSERT(dest.cols == a.cols);
 	MATRIX_ASSERT(dest.rows == a.rows);
 	for(size_t y = 0; y < dest.rows; y++) {
@@ -114,7 +114,7 @@ void matrix_sum(Mat dest, Mat a) {
 		}
 
 	}
-void matrix_rand(Mat dest,float low, float high){
+static inline void matrix_rand(Mat dest,float low, float high){
 	for(size_t y = 0; y < dest.rows; y++) {
 		for(size_t x = 0; x < dest.cols; x++) {
 			MATRIX_SHIFT(dest,y,x) = (TYPE)((rand_float()*(high - low)) + low);   //IN RANGE
@@ -122,7 +122,7 @@ void matrix_rand(Mat dest,float low, float high){
 		}
 	}
 
-void matrix_print(Mat m, const char *name) {
+static inline void matrix_print(Mat m, const char *name) {
 	//system("pause");
 	printf("\n\n______________________________________________________________________________\n");
 	printf("%s",name);
@@ -138,7 +138,7 @@ void matrix_print(Mat m, const char *name) {
 	printf("______________________________________________________________________________\n");
 
 	}
-void matrix_print_out(Mat m, const char *name, size_t out) {
+static inline void matrix_print_out(Mat m, const char *name, size_t out) {
 	//system("pause");
 	printf("\n\n______________________________________________________________________________\n");
 	printf("%s",name);
@@ -160,11 +160,11 @@ void matrix_print_out(Mat m, const char *name, size_t out) {
 
 
 
-float sigmoid(float x) {
+static inline float sigmoid(float x) {
 	return 1.0f/(1 + expf(-x));
 	}
 
-void matrix_activation_cols(Mat m,size_t num) {
+static inline void matrix_activation_cols(Mat m,size_t num) {
 
 	for(size_t y = 0; y < m.rows; y++) {
 		MATRIX_SHIFT(m,y,num) = sigmoid(MATRIX_SHIFT(m,y,num));
@@ -173,7 +173,7 @@ void matrix_activation_cols(Mat m,size_t num) {
 
 	}
 
-void matrix_activation(Mat m) {
+static inline void matrix_activation(Mat m) {
 
 	for(size_t y = 0; y < m.rows; y++)
 		for(size_t x = 0; x < m.cols; x++){
@@ -196,7 +196,7 @@ void matrix_activation(Mat m) {
 	}
 
 //REWRITE IN ONE LOOP
-void matrix_feedforward(Mat *out,Mat input, Mat *weights, Mat *bias,size_t num_of_layer) {
+static inline void matrix_feedforward(Mat *out,Mat input, Mat *weights, Mat *bias,size_t num_of_layer) {
 	//system("pause");
 	matrix_dot(out[0],input,weights[0]);
 	matrix_sum(out[0],bias[0]);
@@ -212,7 +212,7 @@ void matrix_feedforward(Mat *out,Mat input, Mat *weights, Mat *bias,size_t num_o
 		}
 	}
 //*/
-void matrix_softmax(Mat m) {
+static inline void matrix_softmax(Mat m) {
 	double sum = 0;
 	for(size_t y = 0; y < m.rows; y++) {
 		for(size_t x = 0; x < m.cols; x++) {
@@ -227,7 +227,7 @@ void matrix_softmax(Mat m) {
 			}
 		}
 	}
-void matrix_copy(Mat dest, Mat src) {
+static inline void matrix_copy(Mat dest, Mat src) {
 	//MATRIX_ASSERT();
 	for(size_t y = 0; y < dest.rows; y++) {
 		for(size_t x = 0; x < dest.cols; x++) {
@@ -235,7 +235,7 @@ void matrix_copy(Mat dest, Mat src) {
 			}
 		}
 	}
-void matrix_mutation(Mat m) {
+static inline void matrix_mutation(Mat m) {
 	for(size_t y = 0; y < m.rows; y++) {
 		for(size_t x = 0; x < m.cols; x++) {
 			if(rand_float() < MUTATION_RATE) {
@@ -250,7 +250,7 @@ void matrix_mutation(Mat m) {
 			}
 		}
 	}
-void matrix_reproduce(Mat a, Mat b) {
+static inline void matrix_reproduce(Mat a, Mat b) {
 	MATRIX_ASSERT(a.rows == b.rows);
 	MATRIX_ASSERT(a.cols == b.cols);
 	for(size_t y = 0; y < a.rows; y++) {
