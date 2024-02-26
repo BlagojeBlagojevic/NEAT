@@ -20,7 +20,7 @@
 #include<math.h>
 //#include<stdboll.h>
 #undef main
-#define width  500
+#define width  800
 #define height 500
 
 
@@ -51,7 +51,7 @@ typedef struct {
 
 	} PONG;
 
-Pong_Init(PONG *Pong) {
+void Pong_Init(PONG *Pong) {
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		Pong[i].is_allive = 1;
 		Pong[i].left.w  = 10;
@@ -91,7 +91,7 @@ Pong_Init(PONG *Pong) {
 
 	}
 
-void Update_Ball(PONG *p) {
+static inline void Update_Ball(PONG *p) {
 
 	for(size_t i = 0; i < NUMBER_OF_SPICES ; i++) {
 		if(p[i].is_allive) {
@@ -123,7 +123,7 @@ int rand_0Or1(void) {
 	}
 
 
-void Check_Colision_Pack(PONG *p) {
+static inline void Check_Colision_Pack(PONG *p) {
 
 	for(size_t i = 0; i < NUMBER_OF_SPICES ; i++) {
 		if(p[i].is_allive) {
@@ -166,7 +166,7 @@ void Check_Colision_Pack(PONG *p) {
 			}
 		}
 	}
-void Update_Pack(PONG *p) {
+static inline void Update_Pack(PONG *p) {
 
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) { // Update Left
 		if(p[i].is_allive) {
@@ -205,7 +205,7 @@ void Update_Pack(PONG *p) {
 			population[i].input.elem[4] = p[i].ball_speed.y;
 			population[i].input.elem[5] = p[i].ball_speed.x;
 			//population[i].input.elem[6] = sqrt(p[i].right.y*p[i].right.y+p[i].right.x*p[i].right.x);
-		  //population[i].input.elem[6] = sqrt((p[i].right.y- p[i].ball.y)*(p[i].right.y- p[i].ball.y)+(p[i].right.x- p[i].ball.x)*(p[i].right.x - p[i].ball.x));
+			//population[i].input.elem[6] = sqrt((p[i].right.y- p[i].ball.y)*(p[i].right.y- p[i].ball.y)+(p[i].right.x- p[i].ball.x)*(p[i].right.x - p[i].ball.x));
 			}
 
 		neat_forward(population,NUMBER_OF_SPICES);
@@ -228,7 +228,7 @@ void Update_Pack(PONG *p) {
 	}
 
 
-void Neat_Reset_Fitnes() {
+static inline void Neat_Reset_Fitnes() {
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		population[i].fitnes = 100000.0f;
 		//po
@@ -262,32 +262,36 @@ int main(void) {
 	PONG Pong[NUMBER_OF_SPICES];
 	srand(9999);
 	Pong_Init(Pong);
+	Pong[0].color.r = 255;
+	Pong[0].color.g = 255;
+	Pong[0].color.b = 255;
+	Pong[0].color.a = 255;
 	neat_alloc(population);
 	printf("Do you want to load model(y - YES)\n>");
-	char choice,name[30];	
+	char choice,name[30];
 	int Niter;
 	char choice1;
 	scanf("%c",&choice);
-	if(choice == 'y'){
+	if(choice == 'y') {
 		printf("Name of model\n>");
 		scanf("%s",name);
-		neat_load(population,name);	
+		neat_load(population,name);
 		choice = 'n';
-	}
-	else{
-		neat_rand(population,-3,3);	
-	}
+		}
+	else {
+		neat_rand(population,-3,3);
+		}
 	//system("pause");
 	fflush(stdin);
 	printf("Do you want to save model(y - YES)\n>");
 	scanf("%c",&choice1);
-	if(choice1 == 'y'){
+	if(choice1 == 'y') {
 		printf("How mutch iteration till save\n>");
 		scanf("%d",&Niter);
 		printf("Name of saved file\n>");
 		scanf("%s",name);
-		
-	}
+
+		}
 	Neat_Reset_Fitnes();
 	size_t counter = 1;
 
@@ -295,18 +299,19 @@ int main(void) {
 
 		SDL_Event event;
 		if(SDL_PollEvent(&event)) {
-			if(event.type == SDL_QUIT){
+			if(event.type == SDL_QUIT) {
 				return 0;
+				}
 			}
-			}
-			Main_Renderer(renderer,Pong,10);
-			
-			//SDL_Delay(10);
-		
+		Main_Renderer(renderer,Pong,10);
 
+		//SDL_Delay(10);
 		Check_Colision_Pack(Pong);
 		Update_Ball(Pong);
 		Update_Pack(Pong);
+
+
+
 		if(curently_alive == 0) {
 			counter++;
 			for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
@@ -316,10 +321,10 @@ int main(void) {
 			neat_crossover(population);
 			printf("BEST FITNES IS %f\n",population[0].fitnes);
 			Neat_Reset_Fitnes();
-			if((counter % (Niter + 1) == 0) && (choice1 == 'y')){
+			if((counter % (Niter + 1) == 0) && (choice1 == 'y')) {
 				neat_save(population,name);
-			
-			}
+
+				}
 			}
 
 
