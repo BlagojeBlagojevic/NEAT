@@ -24,6 +24,8 @@ The `matrix.h` header file provides a set of functions for matrix operations. It
 - `void matrix_print(Mat m, const char *name)`: Prints the contents of a matrix.
 - `void matrix_print_out(Mat m, const char *name, size_t out)`: Prints the contents of a matrix with a specified number of output columns.
 - `void matrix_mutation(Mat m)`: Applies mutation to a matrix for evolutionary algorithms.
+- `matrix_mutation_disable(Mat m,float EM)` Disable gene.
+- `matrix_mutation_enable(Mat m, float DM)` Enable gene.
 - `void matrix_reproduce(Mat a, Mat b)`: Performs reproduction between two matrices for evolutionary algorithms.
 
 ## NEAT Library
