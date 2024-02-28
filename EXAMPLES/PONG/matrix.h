@@ -11,6 +11,8 @@
 #define MATRIX_CALLOC calloc
 #endif
 
+
+
 #ifndef MATRIX_ASSERT
 #include<assert.h>
 #define MATRIX_ASSERT assert
@@ -240,7 +242,7 @@ static inline void matrix_copy(Mat dest, Mat src) {
 static inline void matrix_mutation(Mat m) {
 	for(size_t y = 0; y < m.rows; y++) {
 		for(size_t x = 0; x < m.cols; x++) {
-			if(rand_float() < MUTATION_RATE) {
+			if(rand_float() < MUTATION_RATE && MATRIX_SHIFT(m,y,x)!=0) {
 				if(rand()%2==0) {
 					MATRIX_SHIFT(m,y,x)+=LR*rand_float();
 					}
@@ -272,7 +274,7 @@ static inline void matrix_mutation_enable(Mat m, float EM) {
 	for(size_t y = 0; y < m.rows; y++) {
 		for(size_t x = 0; x < m.cols; x++) {
 			if(rand_float() < MUTATION_RATE) {
-				if(rand_float() < EM) {
+				if(rand_float() < EM && 	MATRIX_SHIFT(m,y,x) == 0) {
 					MATRIX_SHIFT(m,y,x) = rand_float()*2.0f - 1.0f;
 					}
 				}
