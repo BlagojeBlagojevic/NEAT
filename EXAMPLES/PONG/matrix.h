@@ -11,8 +11,6 @@
 #define MATRIX_CALLOC calloc
 #endif
 
-
-
 #ifndef MATRIX_ASSERT
 #include<assert.h>
 #define MATRIX_ASSERT assert
@@ -193,6 +191,13 @@ static inline void matrix_activation(Mat m) {
 #ifdef MATRIX_ACTIVATION_LRELU
 			if(MATRIX_SHIFT(m,y,x) < 0)  MATRIX_SHIFT(m,y,x)  = -0.01*MATRIX_SHIFT(m,y,x);
 #endif
+#ifdef MATRIX_ACTIVATION_BINARY
+			if(MATRIX_SHIFT(m,y,x) > 0)
+				MATRIX_SHIFT(m,y,x) = 1.0f;
+			else
+				MATRIX_SHIFT(m,y,x) = 0 ;
+#endif
+
 
 			}
 
