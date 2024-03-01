@@ -85,7 +85,7 @@ The `neat.h` header file contains the definition and implementation of the NEAT 
 
 
 int main() {
-    static NEAT population[NUMBER_OF_SPICES];
+    static NEAT population[NUMBER_OF_SPICES + 1];   // +1 cuzz we save elitest in population[NUMBER_OF_SPICES ]
     
     neat_alloc(population);
     neat_rand(population, -1.0, 1.0);
