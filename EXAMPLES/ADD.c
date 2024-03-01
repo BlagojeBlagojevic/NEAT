@@ -12,7 +12,7 @@
 #include<math.h>
 int main() {
 
-	static NEAT n[NUMBER_OF_SPICES];  //MACRO EXTENDED
+	static NEAT n[NUMBER_OF_SPICES + 1];  //MACRO EXTENDED
 	//system("pause");
 	//static NEAT n1[NUMBER_OF_SPICES];
 	neat_alloc(n);
