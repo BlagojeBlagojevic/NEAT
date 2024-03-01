@@ -81,7 +81,7 @@ static inline void neat_alloc(NEAT *n) {
 	}
 static inline void neat_free(NEAT *n) {
 
-	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
+	for(size_t i = 0; i <= NUMBER_OF_SPICES; i++) {
 		matrix_free(n[i].input);
 		//system("pause");
 		for(size_t j = 0; j < NUMBER_OF_LAYER; j++) {
