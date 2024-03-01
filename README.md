@@ -56,12 +56,14 @@ The `neat.h` header file contains the definition and implementation of the NEAT 
 - `MUTATION_RATE`: Mutation rate for evolutionary algorithms.
 - `NUMBER_OF_SPICES` How many agent are there  
 - `LR`  Max change in mutation
+- `DISABLE_MUTATION` Probability to disable the gene
+- `ENABLE_MUTATION` Probability to enable the gene
 - `MATRIX_ACTIVATION_DEFAULT_DISABLE` Disabling default activation function
 - `MATRIX_ACTIVATION_SIGMOID`    Sets activation function to be sigmoid
 - `MATRIX_ACTIVATION_RELU`    Sets activation function to be RELU
 - `MATRIX_ACTIVATION_LRELU`    Sets activation function to be LRELU
 - `MATRIX_ACTIVATION_TANH`    Sets activation function to be tanh
-- `MATRIX_ACTIVATION_SIN`    Sets activation function to be sin
+- `MATRIX_ACTIVATION_BINARY`    Sets activation function to be 0 or 1
 ## Usage
 1. Include the necessary header files (`neat.h`) in your project.
 2. Configure the constants according to your requirements.
