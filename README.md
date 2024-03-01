@@ -33,7 +33,7 @@ The `matrix.h` header file provides a set of functions for matrix operations. It
 The `neat.h` header file contains the definition and implementation of the NEAT algorithm using the matrix operations provided in `matrix.h`. NEAT is a method for evolving artificial neural networks with the ability to control the topology of the networks.
 
 ### NEAT Struct
-- `NEAT`: Represents an individual neural network in the NEAT algorithm. It contains fields for fitness, input, weights, biases, output, and softmax output.
+- `NEAT`: Represents an individual neural network in the NEAT algorithm. It contains fields for fitness(Min fitness is best like errors like loss function), input, weights, biases, output, and softmax output.
 
 ### NEAT Functions
 - `void neat_alloc(NEAT *n)`: Allocates memory for NEAT structures.
