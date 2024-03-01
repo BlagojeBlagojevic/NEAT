@@ -81,7 +81,7 @@ static inline void neat_alloc(NEAT *n) {
 	}
 static inline void neat_free(NEAT *n) {
 
-	for(size_t i = 0; i <= NUMBER_OF_SPICES; i++) {
+	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		matrix_free(n[i].input);
 		//system("pause");
 		for(size_t j = 0; j < NUMBER_OF_LAYER; j++) {
@@ -187,7 +187,7 @@ static inline void neat_crossover(NEAT *n) {
 		memcpy(&n[NUMBER_OF_SPICES],&n[0],sizeof(n[0]));
 	if(n[NUMBER_OF_SPICES - 1].fitnes > n[NUMBER_OF_SPICES].fitnes)
 		memcpy(&n[NUMBER_OF_SPICES - 1],&n[NUMBER_OF_SPICES],sizeof(n[0]));
-	//
+//
 
 	//printf("\n\nMIN = %f",n[0].fitnes);
 	//memcpy(&n1[0],&n[0],sizeof(n[0]));
