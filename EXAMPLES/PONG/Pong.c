@@ -41,7 +41,7 @@
 #include "neat.h"
 
 size_t curently_alive  = NUMBER_OF_SPICES;   //Must be equal to NUMBER_OF_SPICES
-NEAT population[NUMBER_OF_SPICES];
+NEAT population[NUMBER_OF_SPICES + 1];
 typedef struct {
 
 	SDL_Rect  left;
