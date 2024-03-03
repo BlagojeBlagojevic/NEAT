@@ -59,7 +59,7 @@ static inline void neat_load(NEAT *n,const char *name);
 static inline void neat_alloc(NEAT *n) {
 
 	//*n = (NEAT*)calloc(NUMBER_OF_SPICES, sizeof(NEAT*));
-	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
+	for(size_t i = 0; i <= NUMBER_OF_SPICES; i++) {
 		n[i].input       = matrix_alloc(1,NINPUTS);
 		n[i].weigts[0]   = matrix_alloc(NINPUTS,NUMBER_OF_NEURON);
 		n[i].bias[0]	   = matrix_alloc(1,NUMBER_OF_NEURON);
@@ -67,15 +67,15 @@ static inline void neat_alloc(NEAT *n) {
 		n[i].out_softmax = matrix_alloc(1,NOUT);
 
 
-		for(size_t j = 1; j < NUMBER_OF_LAYER; j++) {
+		for(size_t j = 1; j < NUMBER_OF_LAYER - 1; j++) {
 			n[i].weigts[j]  = matrix_alloc(NUMBER_OF_NEURON,NUMBER_OF_NEURON);
 			n[i].bias[j]    = matrix_alloc(1,NUMBER_OF_NEURON);
 			n[i].out[j]     = matrix_alloc(1,NUMBER_OF_NEURON);
 			}
 		//Widjeti kako
-		//n[i].weigts[NUMBER_OF_LAYER - 1]  = matrix_alloc(NOUT,NUMBER_OF_NEURON);
-		//n[i].bias[NUMBER_OF_LAYER - 1]    = matrix_alloc(1,NOUT);
-		//n[i].out[NUMBER_OF_LAYER - 1]     = matrix_alloc(1,NOUT);
+		n[i].weigts[NUMBER_OF_LAYER - 1]  = matrix_alloc(NUMBER_OF_NEURON,NOUT);
+		n[i].bias[NUMBER_OF_LAYER - 1]    = matrix_alloc(1,NOUT);
+		n[i].out[NUMBER_OF_LAYER - 1]     = matrix_alloc(1,NOUT);
 		}
 
 	}
@@ -131,7 +131,7 @@ static inline void neat_print(NEAT *n) {
 		system("pause");
 		printf("\n");
 		system("cls");
-		printf("\t\t\t NEAT SPICES %d\n",j);
+		printf("\t\t\t NEAT SPICES %ld\n",j);
 		printf("\n\n______________________________________________________________________________\n");
 		system("pause");
 
@@ -141,12 +141,12 @@ static inline void neat_print(NEAT *n) {
 			MATRIX_PRINT(n[j].weigts[i]);
 			printf("\ni = %ld \n\nj = %ld",i,j);
 			MATRIX_PRINT(n[j].bias[i]);
-			printf("\ni = %ld \n\nj = %zu",i,j);
+			printf("\ni = %ld \n\nj = %ld",i,j);
 			MATRIX_PRINT(n[j].out[i]);
 			printf("\ni = %ld \n\nj = %ld",i,j);
 			}
 		MATRIX_PRINT(n[j].out_softmax);
-		printf("\nj = %ld",j);
+		printf("\nj = %lld",j);
 		}
 	}
 
@@ -181,9 +181,17 @@ static inline void neat_crossover(NEAT *n) {
 				}
 			}
 		}
+
+	//ELITIZAM
+	if(n[0].fitnes < n[NUMBER_OF_SPICES].fitnes)
+		memcpy(&n[NUMBER_OF_SPICES],&n[0],sizeof(n[0]));
+	if(n[NUMBER_OF_SPICES - 1].fitnes > n[NUMBER_OF_SPICES].fitnes)
+		memcpy(&n[NUMBER_OF_SPICES - 1],&n[NUMBER_OF_SPICES],sizeof(n[0]));
+//
+
 	//printf("\n\nMIN = %f",n[0].fitnes);
 	//memcpy(&n1[0],&n[0],sizeof(n[0]));
-	for(size_t i = 1; i < NUMBER_OF_SPICES; i++) {
+	for(size_t i = 1; i < NUMBER_OF_SPICES - 1; i++) {
 
 		//int s1 = rand()%(NUMBER_OF_SPICES / 10);
 		if(rand_float() < 0.1)
@@ -192,10 +200,8 @@ static inline void neat_crossover(NEAT *n) {
 			int s2 = rand()%(NUMBER_OF_SPICES_IN_CROSOWER);
 			neat_reproduce(&n[i],&n[s2]);
 			}
-
-		//neat_reproduce(&n[s2],&n[0]);
 		}
-	//memcpy(&n[NUMBER_OF_SPICES - 1],&n1[0],sizeof(n1[0]));
+
 
 
 	}
