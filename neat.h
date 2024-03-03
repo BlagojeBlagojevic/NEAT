@@ -131,7 +131,7 @@ static inline void neat_print(NEAT *n) {
 		system("pause");
 		printf("\n");
 		system("cls");
-		printf("\t\t\t NEAT SPICES %d\n",j);
+		printf("\t\t\t NEAT SPICES %ld\n",j);
 		printf("\n\n______________________________________________________________________________\n");
 		system("pause");
 
@@ -141,12 +141,12 @@ static inline void neat_print(NEAT *n) {
 			MATRIX_PRINT(n[j].weigts[i]);
 			printf("\ni = %ld \n\nj = %ld",i,j);
 			MATRIX_PRINT(n[j].bias[i]);
-			printf("\ni = %ld \n\nj = %zu",i,j);
+			printf("\ni = %ld \n\nj = %ld",i,j);
 			MATRIX_PRINT(n[j].out[i]);
 			printf("\ni = %ld \n\nj = %ld",i,j);
 			}
 		MATRIX_PRINT(n[j].out_softmax);
-		printf("\nj = %ld",j);
+		printf("\nj = %lld",j);
 		}
 	}
 
