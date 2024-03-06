@@ -15,6 +15,8 @@ The `matrix.h` header file provides a set of functions for matrix operations. It
 - `void matrix_free(Mat m)`: Frees memory allocated for a matrix.
 - `void matrix_dot(Mat dest, Mat a, Mat b)`: Computes the dot product of two matrices.
 - `void matrix_sum(Mat dest, Mat a)`: Computes the element-wise sum of two matrices.
+- `matrix_mul_scalar(Mat dest, float scalar)`: Multiply matrix with scalar.
+- `matrix_add_scalar(Mat dest, float scalar)`: Add scalar to matrix
 - `void matrix_rand(Mat dest, float low, float high)`: Initializes a matrix with random values within a specified range.
 - `void matrix_activation(Mat m)`: Applies activation functions to all elements of a matrix.
 - `void matrix_activation_cols(Mat m, size_t num)`: Applies activation function to a specific column of a matrix.
@@ -63,6 +65,7 @@ The `neat.h` header file contains the definition and implementation of the NEAT 
 - `MATRIX_ACTIVATION_RELU`    Sets activation function to be RELU
 - `MATRIX_ACTIVATION_LRELU`    Sets activation function to be LRELU
 - `MATRIX_ACTIVATION_TANH`    Sets activation function to be tanh
+- `ENABLE_SOFTMAX` Enable     out_softmax 
 - `MATRIX_ACTIVATION_BINARY`    Sets activation function to be 0 or 1
 ## Usage
 1. Include the necessary header files (`neat.h`) in your project.
