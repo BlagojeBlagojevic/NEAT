@@ -1,75 +1,83 @@
 #define NUMBER_OF_SPICES 20
 #define NUMBER_OF_SPICES_IN_CROSOWER 5
-#define LR 0.2
-#define MUTATION_RATE 0.2
+#define LR 0.005
+#define MUTATION_RATE 0.1
 #define NUMBER_OF_LAYER 2
-#define NUMBER_OF_NEURON 10
-#define NINPUTS 28*28
+#define NUMBER_OF_NEURON 20
+#define NINPUTS 764
 #define NOUT 10
 #define NEAT_IMPLEMETATION
 #define MATRIX_ACTIVATION_DEFAULT_DISABLE
-#define MATRIX_ACTIVATION_RELU
+#define MATRIX_ACTIVATION_LRELU
 #define ENABLE_MUTATION 0.2
-#define DISABLE_MUTATION 0.01
+#define DISABLE_MUTATION 0.04
 #define NEAT_IMPLEMETATION
 #define ENABLE_SOFTMAX
 #include "neat.h"
 #include<string.h>
-#define NUM_OF_IMAGES 7*3
+#define NUM_OF_IMAGES 9*10
 
 #include<float.h>
+#define IMAGE_IMPLEMENTATION
+#include "image.h"
 
-NEAT population[NUMBER_OF_SPICES + 1];
 
 int main() {
 
 	//Mat compresion = matrix_alloc(28*28,28);
+	NEAT population[NUMBER_OF_SPICES + 1];
 	Mat image[NUM_OF_IMAGES];
+	Image ia;
 	int label[NUM_OF_IMAGES];
 	char path[] = "mnist/0/1.png";
-	FILE *f;
+	//uint8_t *pixels;
+	//int width,height,chanels;
+	//pixels = (uint8_t *)calloc(28*28*2,sizeof(uint8_t));
+	
+	//FILE *f;
 	neat_alloc(population);
+	//neat_load(population,"mnist.bin");
 	//neat_rand(population,-3,3);
+	//neat_load(population,"mnist.bin");
 	for(size_t i = 0; i < NUM_OF_IMAGES; i++) {
-		image[i] = matrix_alloc(1,28*28);
+		image[i] = matrix_alloc(1,NINPUTS);
 
 		}
-	srand(time(0));
+	//srand(time(0));
+	srand(9999);
 	neat_alloc(population);
 	for(size_t i = 0,counter = 1; i < NUM_OF_IMAGES - 1; i++) {
-
+		
 
 		//if(f==NULL)
 		label[i] = path[6] - 48;
 		printf("%s\n",path);
 		path[8] = '0' + counter++;
-		if(counter == 8) {
+		if(counter == 10) {
 
 			counter = 1;
 			path[6]++;
 
 			}
-		f = fopen(path,"rb");
-		if(f == NULL)
-			exit(1);
-
-		for(size_t j = 0; j < 28*28; j++) {
-			image[i].elem[j] = (float)fgetc(f) / 255  ;
+		 ia = Image_Alloc_Name(path);
+		 printf("Size %d\n",ia.chanels*ia.height*ia.width);
+			for(size_t j = 0; j < NINPUTS ; j++) {
+				image[i].elem[j] = (float)ia.pixels[j] / 255.0f;
 			}
-
-		fclose(f);
+			Image_Free(ia);
+		//fclose(f);
 		//matrix_dot(out[i],image[i],compresion);
 		}
 
 
 
 	for(size_t z = 0; z < NUM_OF_IMAGES  - 1; z++) {
-		printf("label %d\n",label[z]);
+		printf("label(%d) %d\n",z,label[z]);
 		}
 	system("pause");
 	// Training loop
 	for(size_t i = 0; i < 1000; i++) {
-		Neat_Reset_Fitnes(population);
+		
 		for(size_t z = 0; z < NUM_OF_IMAGES  - 1; z++) {
 			for(size_t x = 0; x < NUMBER_OF_SPICES; x++) {
 				for(size_t y = 0; y < NINPUTS; y++)
@@ -77,22 +85,24 @@ int main() {
 				}
 			neat_forward(population,NUMBER_OF_SPICES);
 			for(size_t x = 0; x < NUMBER_OF_SPICES; x++) {
-				if(population[x].out[NUMBER_OF_LAYER - 1].elem[label[z]] > 0.7f)
-					population[x].fitnes-=population[x].out_softmax.elem[label[z]];
+				population[x].fitnes-=population[x].out_softmax.elem[label[z]];
+				//if(population[x].out[NUMBER_OF_LAYER - 1].elem[label[z]] > 0.7f)
+					//population[x].fitnes-=population[x].out_softmax.elem[label[z]];
 				//for(size_t k = 0;k < 10;k++){
-				//if(population[x].out[NUMBER_OF_LAYER - 1].elem[k] > 0.2f && k!=label[z]){
-				//	population[x].fitnes++;
-				//	}
+				//if(population[x].out[NUMBER_OF_LAYER - 1].elem[k]> 0.7f && k!=label[z]){
+					//population[x].fitnes+=population[x].out_softmax.elem[k];
+					//}
 				//}
 				}
-
+				//neat_crossover(population);
 			}
 		neat_crossover(population);
-		printf("Fitnes  is %f\n", population[0].fitnes);
+		printf("Fitnes(%I64u)  is %f\n",i,population[0].fitnes);
+		Neat_Reset_Fitnes(population);
 
 
 		}
-
+	neat_save(population,"mnist.bin");
 	while(1) {
 		printf("what image to  test:\n");
 		int a;
