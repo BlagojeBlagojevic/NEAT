@@ -1,7 +1,12 @@
 ### Genetic PONG
 
 This is an example of a genetic algorithm playing pong.
+
+
+
 Pong is implemented using SDL2 as a graphics library. 
+
+
 Feel free to experiment with this example by making changes.
 
 
