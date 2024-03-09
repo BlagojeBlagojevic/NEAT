@@ -1,14 +1,14 @@
 #define NUMBER_OF_SPICES 20
-#define NUMBER_OF_SPICES_IN_CROSOWER 5
+#define NUMBER_OF_SPICES_IN_CROSOWER 2
 #define LR 0.005
 #define MUTATION_RATE 0.1
 #define NUMBER_OF_LAYER 2
-#define NUMBER_OF_NEURON 20
-#define NINPUTS 764
+#define NUMBER_OF_NEURON 10
+#define NINPUTS 764 / 3
 #define NOUT 10
 #define NEAT_IMPLEMETATION
 #define MATRIX_ACTIVATION_DEFAULT_DISABLE
-#define MATRIX_ACTIVATION_LRELU
+#define MATRIX_ACTIVATION_SWISH
 #define ENABLE_MUTATION 0.2
 #define DISABLE_MUTATION 0.04
 #define NEAT_IMPLEMETATION
@@ -60,8 +60,10 @@ int main() {
 
 			}
 		 ia = Image_Alloc_Name(path);
+		 //Image_Applay_Kernel(ia,ia,KERNEL_EDGE,3,3);
+		 //Image_Black_White_Filtar(ia,150);
 		 printf("Size %d\n",ia.chanels*ia.height*ia.width);
-			for(size_t j = 0; j < NINPUTS ; j++) {
+			for(size_t j = 0; j < 764 ; j+=3) {
 				image[i].elem[j] = (float)ia.pixels[j] / 255.0f;
 			}
 			Image_Free(ia);
@@ -76,28 +78,26 @@ int main() {
 		}
 	system("pause");
 	// Training loop
-	for(size_t i = 0; i < 1000; i++) {
+	for(size_t i = 0; i < 10000; i++) {
 		
 		for(size_t z = 0; z < NUM_OF_IMAGES  - 1; z++) {
 			for(size_t x = 0; x < NUMBER_OF_SPICES; x++) {
-				for(size_t y = 0; y < NINPUTS; y++)
+				for(size_t y = 0; y < NINPUTS && z%9!=0; y++)
 					population[x].input.elem[y] = image[z].elem[y];
 				}
 			neat_forward(population,NUMBER_OF_SPICES);
 			for(size_t x = 0; x < NUMBER_OF_SPICES; x++) {
-				population[x].fitnes-=population[x].out_softmax.elem[label[z]];
-				//if(population[x].out[NUMBER_OF_LAYER - 1].elem[label[z]] > 0.7f)
-					//population[x].fitnes-=population[x].out_softmax.elem[label[z]];
-				//for(size_t k = 0;k < 10;k++){
-				//if(population[x].out[NUMBER_OF_LAYER - 1].elem[k]> 0.7f && k!=label[z]){
-					//population[x].fitnes+=population[x].out_softmax.elem[k];
-					//}
-				//}
+				//population[x].fitnes--;
+				//population[x].fitnes-=population[x].out_softmax.elem[label[z]];
+				if(population[x].out_softmax.elem[label[z]] > 0.7f)
+					population[x].fitnes-=population[x].out_softmax.elem[label[z]];
+
 				}
 				//neat_crossover(population);
 			}
 		neat_crossover(population);
 		printf("Fitnes(%I64u)  is %f\n",i,population[0].fitnes);
+		///////printf("Corect images %f\n" ,(float) (population[0].fitnes - 81) / (float)(99932) 
 		Neat_Reset_Fitnes(population);
 
 
