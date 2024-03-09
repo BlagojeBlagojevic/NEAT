@@ -61,10 +61,11 @@ The `neat.h` header file contains the definition and implementation of the NEAT 
 - `DISABLE_MUTATION` Probability to disable the gene
 - `ENABLE_MUTATION` Probability to enable the gene
 - `MATRIX_ACTIVATION_DEFAULT_DISABLE` Disabling default activation function
-- `MATRIX_ACTIVATION_SIGMOID`    Sets activation function to be sigmoid
-- `MATRIX_ACTIVATION_RELU`    Sets activation function to be RELU
-- `MATRIX_ACTIVATION_LRELU`    Sets activation function to be LRELU
-- `MATRIX_ACTIVATION_TANH`    Sets activation function to be tanh
+- `MATRIX_ACTIVATION_SIGMOID`    Sets activation function to be sigmoid(x)
+- `MATRIX_ACTIVATION_SWISH`    Sets activation function to be sigmoid(x) * x 
+- `MATRIX_ACTIVATION_RELU`    Sets activation function to be RELU(x)
+- `MATRIX_ACTIVATION_LRELU`    Sets activation function to be LRELU(x)
+- `MATRIX_ACTIVATION_TANH`    Sets activation function to be tanh(x)
 - `ENABLE_SOFTMAX` Enable     out_softmax 
 - `MATRIX_ACTIVATION_BINARY`    Sets activation function to be 0 or 1
 ## Usage
