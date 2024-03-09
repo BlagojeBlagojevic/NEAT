@@ -43,6 +43,9 @@ static inline void matrix_free(Mat m);
 
 static inline void matrix_dot(Mat dest, Mat a, Mat b);
 static inline void matrix_sum(Mat dest, Mat a);
+static inline void matrix_dec(Mat dest, Mat a);
+static inline void matrix_mul_scalar(Mat dest, float scalar);
+static inline void matrix_add_scalar(Mat dest, float scalar);
 static inline void matrix_rand(Mat dest,float low, float high);
 static inline void matrix_activation(Mat m);
 static inline void matrix_activation_cols(Mat m,size_t num);
@@ -58,6 +61,7 @@ static inline void matrix_print_out(Mat m, const char *name, size_t out);
 #ifndef LR
 #define LR 0.6
 #endif
+
 #ifndef MUTATION_RATE
 #define MUTATION_RATE 0.9
 #endif
@@ -116,6 +120,37 @@ static inline void matrix_sum(Mat dest, Mat a) {
 		}
 
 	}
+static inline void matrix_dec(Mat dest, Mat a) {
+	MATRIX_ASSERT(dest.cols == a.cols);
+	MATRIX_ASSERT(dest.rows == a.rows);
+	for(size_t y = 0; y < dest.rows; y++) {
+		for(size_t x = 0; x < dest.cols; x++) {
+
+			MATRIX_SHIFT(dest,y,x) -= MATRIX_SHIFT(a,y,x);
+			}
+		}
+
+	}
+static inline void matrix_add_scalar(Mat dest, float scalar){
+	for(size_t y = 0; y < dest.rows; y++) {
+		for(size_t x = 0; x < dest.cols; x++) {
+
+			MATRIX_SHIFT(dest,y,x) += scalar;
+			}
+		}
+}	
+	
+static inline void matrix_mul_scalar(Mat dest, float scalar){
+	for(size_t y = 0; y < dest.rows; y++) {
+		for(size_t x = 0; x < dest.cols; x++) {
+
+			MATRIX_SHIFT(dest,y,x) *= scalar;
+			}
+		}
+
+}	
+	
+	
 static inline void matrix_rand(Mat dest,float low, float high) {
 	for(size_t y = 0; y < dest.rows; y++) {
 		for(size_t x = 0; x < dest.cols; x++) {
@@ -198,7 +233,9 @@ static inline void matrix_activation(Mat m) {
 				MATRIX_SHIFT(m,y,x) = 0 ;
 #endif
 
-
+#ifdef MATRIX_ACTIVATION_SWISH
+			MATRIX_SHIFT(m,y,x) *= sigmoid(MATRIX_SHIFT(m,y,x));
+#endif
 			}
 
 
@@ -220,19 +257,21 @@ static inline void matrix_feedforward(Mat *out,Mat input, Mat *weights, Mat *bia
 		matrix_activation(out[i]);
 		}
 	}
+	
+
 //*/
 static inline void matrix_softmax(Mat m) {
-	double sum = 0;
+	double sum = 0.0f;
 	for(size_t y = 0; y < m.rows; y++) {
 		for(size_t x = 0; x < m.cols; x++) {
-			sum+=expf(MATRIX_SHIFT(m,y,x));
+			sum+=exp((double)MATRIX_SHIFT(m,y,x));
 			}
 		}
 	//printf("sum = %f",sum);
 	//system("pause");
 	for(size_t y = 0; y < m.rows; y++) {
 		for(size_t x = 0; x < m.cols; x++) {
-			MATRIX_SHIFT(m,y,x) = expf(MATRIX_SHIFT(m,y,x))/sum;
+			MATRIX_SHIFT(m,y,x) = (double)exp((double)MATRIX_SHIFT(m,y,x))/(double)sum;
 			}
 		}
 	}
