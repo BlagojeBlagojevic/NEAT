@@ -53,6 +53,7 @@ static inline void matrix_feedforward(Mat *out,Mat input, Mat *weights, Mat *bia
 static inline void matrix_reproduce(Mat a, Mat b);
 static inline void matrix_softmax(Mat m);
 static inline void matrix_copy(Mat dest, Mat src);
+
 static inline void matrix_print(Mat m,const char *name);
 static inline void matrix_print_out(Mat m, const char *name, size_t out);
 #define MATRIX_PRINT(m) matrix_print((m), #m)
@@ -60,6 +61,7 @@ static inline void matrix_print_out(Mat m, const char *name, size_t out);
 #ifndef LR
 #define LR 0.6
 #endif
+
 #ifndef MUTATION_RATE
 #define MUTATION_RATE 0.9
 #endif
@@ -216,7 +218,7 @@ static inline void matrix_activation(Mat m) {
 			MATRIX_SHIFT(m,y,x) = sigmoid(MATRIX_SHIFT(m,y,x));
 #endif
 #ifdef MATRIX_ACTIVATION_TANH
-			MATRIX_SHIFT(m,y,x) = tanh(MATRIX_SHIFT(m,y,x)) ;
+			MATRIX_SHIFT(m,y,x) = tanh(MATRIX_SHIFT(m,y,x));
 #endif
 #ifdef MATRIX_ACTIVATION_RELU
 			if(MATRIX_SHIFT(m,y,x) < 0)  MATRIX_SHIFT(m,y,x)  = 0;
@@ -231,7 +233,9 @@ static inline void matrix_activation(Mat m) {
 				MATRIX_SHIFT(m,y,x) = 0 ;
 #endif
 
-
+#ifdef MATRIX_ACTIVATION_SWISH
+			MATRIX_SHIFT(m,y,x) *= sigmoid(MATRIX_SHIFT(m,y,x));
+#endif
 			}
 
 
