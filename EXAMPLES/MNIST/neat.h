@@ -118,9 +118,9 @@ static inline void neat_forward(NEAT *n,size_t Niter) {
 		//system("pause");
 		matrix_feedforward(n[i].out,n[i].input,n[i].weigts,n[i].bias,NUMBER_OF_LAYER);
 		matrix_copy(n[i].out_softmax,n[i].out[NUMBER_OF_LAYER-1]);
-		#ifdef ENABLE_SOFTMAX
-			matrix_softmax(n[i].out_softmax);
-		#endif
+#ifdef ENABLE_SOFTMAX
+		matrix_softmax(n[i].out_softmax);
+#endif
 		//matrix_print_out(n[i].out_softmax,"out_SOFTMAX",NOUT);
 		//matrix_print_out(n[i].out[NUMBER_OF_LAYER - 1],"OUT",NOUT);
 		//system("pause");
@@ -134,22 +134,22 @@ static inline void neat_print(NEAT *n) {
 		system("pause");
 		printf("\n");
 		system("cls");
-		printf("\t\t\t NEAT SPICES %ld\n",j);
+		printf("\t\t\t NEAT SPICES %I64u\n",j);
 		printf("\n\n______________________________________________________________________________\n");
 		system("pause");
 
 		for(size_t i = 0; i < NUMBER_OF_LAYER; i++) {
 
-			printf("\ni = %ld \n\nj = %ld",i,j);
+			printf("\ni =  %d \n\nj =  %d",(int)i,(int)j);
 			MATRIX_PRINT(n[j].weigts[i]);
-			printf("\ni = %ld \n\nj = %ld",i,j);
+			printf("\ni =  %d \n\nj =  %d",(int)i,(int)j);
 			MATRIX_PRINT(n[j].bias[i]);
-			printf("\ni = %ld \n\nj = %ld",i,j);
+			printf("\ni =  %d \n\nj =  %d",(int)i,(int)j);
 			MATRIX_PRINT(n[j].out[i]);
-			printf("\ni = %ld \n\nj = %ld",i,j);
+			printf("\ni =  %d \n\nj =  %d",(int)i,(int)j);
 			}
 		MATRIX_PRINT(n[j].out_softmax);
-		printf("\nj = %lld",j);
+		printf("\nj =  %d",(int)j);
 		}
 	}
 
