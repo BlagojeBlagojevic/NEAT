@@ -56,7 +56,8 @@ The `neat.h` header file contains the definition and implementation of the NEAT 
 - `NINPUTS`: Number of input neurons.
 - `NOUT`: Number of output neurons.
 - `MUTATION_RATE`: Mutation rate for evolutionary algorithms.
-- `NUMBER_OF_SPICES` How many agent are there  
+- `NUMBER_OF_SPICES` How many agent are there
+- `NUMBER_OF_SPICES_IN_CROSOWER` How many are reproducing 
 - `LR`  Max change in mutation
 - `DISABLE_MUTATION` Probability to disable the gene
 - `ENABLE_MUTATION` Probability to enable the gene
