@@ -11,7 +11,7 @@
 #define MATRIX_ACTIVATION_SWISH
 #define ENABLE_MUTATION 0.2
 #define DISABLE_MUTATION 0.04
-#define NEAT_IMPLEMETATION
+//#define NEAT_IMPLEMETATION
 #define ENABLE_SOFTMAX
 #include "neat.h"
 #include<string.h>
