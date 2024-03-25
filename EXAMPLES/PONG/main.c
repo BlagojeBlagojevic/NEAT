@@ -177,6 +177,7 @@ static inline void Update_Pack(PONG *p) {
 			population[i].input.elem[2] = (float)p[i].ball.x;
 			population[i].input.elem[3] = (float)p[i].ball.y;
 			population[i].input.elem[4] = (float)p[i].ball_speed.y;
+			population[i].input.elem[5] = (float)p[i].ball_speed.x;
 			//population[i].input.elem[6] = sqrt((p[i].left.y- p[i].ball.y)*(p[i].left.y- p[i].ball.y)+(p[i].left.x- p[i].ball.x)*(p[i].left.x - p[i].ball.x));
 
 			}
