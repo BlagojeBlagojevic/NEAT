@@ -131,16 +131,16 @@ static inline void matrix_dec(Mat dest, Mat a) {
 		}
 
 	}
-static inline void matrix_add_scalar(Mat dest, float scalar){
+static inline void matrix_add_scalar(Mat dest, float scalar) {
 	for(size_t y = 0; y < dest.rows; y++) {
 		for(size_t x = 0; x < dest.cols; x++) {
 
 			MATRIX_SHIFT(dest,y,x) += scalar;
 			}
 		}
-}	
-	
-static inline void matrix_mul_scalar(Mat dest, float scalar){
+	}
+
+static inline void matrix_mul_scalar(Mat dest, float scalar) {
 	for(size_t y = 0; y < dest.rows; y++) {
 		for(size_t x = 0; x < dest.cols; x++) {
 
@@ -148,9 +148,9 @@ static inline void matrix_mul_scalar(Mat dest, float scalar){
 			}
 		}
 
-}	
-	
-	
+	}
+
+
 static inline void matrix_rand(Mat dest,float low, float high) {
 	for(size_t y = 0; y < dest.rows; y++) {
 		for(size_t x = 0; x < dest.cols; x++) {
@@ -236,6 +236,13 @@ static inline void matrix_activation(Mat m) {
 #ifdef MATRIX_ACTIVATION_SWISH
 			MATRIX_SHIFT(m,y,x) *= sigmoid(MATRIX_SHIFT(m,y,x));
 #endif
+
+#ifdef MATRIX_ACTIVATION_RAND_VALUE
+#ifdef MATRIX_ACTIVATION_RAND_RATE
+			if(rand_float() > MATRIX_ACTIVATION_RAND_RATE)
+				MATRIX_SHIFT(m,y,x) += 2*rand_float() * (float)MATRIX_ACTIVATION_RAND_VALUE - (float)MATRIX_ACTIVATION_RAND_VALUE;
+#endif
+#endif
 			}
 
 
@@ -257,7 +264,7 @@ static inline void matrix_feedforward(Mat *out,Mat input, Mat *weights, Mat *bia
 		matrix_activation(out[i]);
 		}
 	}
-	
+
 
 //*/
 static inline void matrix_softmax(Mat m) {
