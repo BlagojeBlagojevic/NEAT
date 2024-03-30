@@ -1,7 +1,6 @@
 #ifndef NEAT_H
 #define NEAT_H
 #define MATRIX_IMPLEMETATION
-//#define TYPE int
 #include "matrix.h"
 #include<time.h>
 
