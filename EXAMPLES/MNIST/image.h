@@ -22,7 +22,7 @@
 
 #define IMAGE_CALLOC calloc
 
-
+#include<complex.h>
 
 typedef struct {
 
@@ -38,6 +38,7 @@ typedef struct {
 
 Image Image_Alloc(int width,int height,int chanels);  //ALLOCATE IMAGE FULL OF ZEROS
 Image Image_Alloc_Name(const char* name);   //DYNAMICLY ALLOCATE IMAGE ALLOCATION IS IN STB_IMAGE
+Image Image_Alloc_Name_Fft(const char* name,int xd,int yd);
 void Image_Free(Image i);
 
 void Image_Set(Image i, uint8_t number);
@@ -76,6 +77,10 @@ void Image_Draw_Rect(Image i, size_t startX,size_t startY,size_t h,size_t w,uint
 
 size_t Load_Binary_To_Image(Image i,char *name);
 void Image_To_Binary(Image i,size_t bin_size,char *name);
+
+
+//FFT
+void fft(uint8_t *in,size_t pivot,int complex *out,size_t n); 
 
 
 #endif
@@ -376,5 +381,110 @@ void Image_To_Binary(Image i,size_t bin_size,char *name){
 	
 }
 
+void fft(uint8_t *in,size_t pivot,int complex *out,size_t n)  //coll
+{
+    float pi=3.141569;
+    assert(n > 0);
+    //printf("nesto");
+    if(n==1)
+    {
+        out[0]=in[0];
+        return; //braking assert error
+    }
+    fft(in,pivot*2,out,n/2);//even
+    fft(in+pivot,pivot*2,n/2+out,n/2);//odd  
+    for (size_t k = 0; k < n/2; k++)
+    {
+        float t=(float)k/n;
+        float complex e = out[k];
+        float complex v = cexp(-2*pi*I*t)*out[k+n/2];
+        out[k]=e+v;
+        out[k+n/2]=e-v; 
+    }
+   
+    
+    
+}
+
+
+Image Image_Alloc_Name_Fft(const char* name,int xd,int yd)
+{
+	Image ia = Image_Alloc_Name(name);
+	IMAGE_ASSERT(xd <= 500 && yd <= 500);
+	int complex mag[xd*yd];
+	fft(ia.pixels,0,mag,xd*yd);
+	//system("pause");
+  int max_r = 0,max_i = 0; 
+	for(size_t i = 0;i < xd*yd;i++){
+		if(creal(mag[i]) > max_r){
+			max_r = (int)creal(mag[i]);
+		}
+		if(cimag(mag[i]) > max_i){
+			max_i = (int)cimag(mag[i]);
+		}
+	}
+	
+	
+	Image b = Image_Alloc(xd,yd,1);
+	size_t z = 0;
+	for(size_t y = 0;y < yd;y++){
+		for(size_t x = 0;x < xd;x++){
+			float real = (creal(mag[z])); // max_r;
+			float imag = (cimag(mag[z])); // max_i;
+			uint8_t magnitude = (uint8_t)(sqrt(real*real + imag*imag)); //* 255;
+			PIXEL_AT(b,y,x) = magnitude; 
+			z++;
+	}}
+  free(ia.pixels);
+  return b;
+
+
+}
+
+
 
 #endif
+
+
+
+
+#ifdef DYNAMIC
+
+#ifndef ARRAY_TYPE
+#define ARRAY_TYPE int 
+#endif 
+
+typedef struct d{
+	
+	ARRAY_TYPE *array;
+	size_t index_of_last;  //INDEX OF LAST ELEMET
+	size_t _size;          //DEFINE THIS SIZE(IN INIT OF ARRAY) 
+
+}D_ARRAY;
+
+
+
+void init_Array(D_ARRAY *array,size_t initialSize){
+	
+	array->array = calloc(initialSize,sizeof(ARRAY_TYPE));
+	array->_size = initialSize;
+	array->index_of_last = 0;
+	
+	
+}
+void insert_Array(D_ARRAY *array,ARRAY_TYPE elem){
+	
+	if(array->index_of_last == array->_size){
+		array->_size *= 2;
+		array->array = realloc(array->array,sizeof(ARRAY_TYPE)*array->_size);
+		if(array->array == NULL)
+			assert(0 && "REALOC FAIL!!! ");
+			printf("Realloc!!!\n");
+		
+	}
+	array->array[array->index_of_last++] = elem;
+	
+}
+
+#endif
+
