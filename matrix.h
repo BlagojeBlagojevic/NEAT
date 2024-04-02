@@ -26,6 +26,11 @@
 #define MATRIX_ACTIVATION_SIGMOID
 #endif
 
+#ifndef T
+#define T 1
+#endif
+
+
 typedef struct {
 	size_t rows;    //NUM OF   ROWS
 	size_t cols;    //NUM OF   COLS
@@ -239,7 +244,7 @@ static inline void matrix_activation(Mat m) {
 
 #ifdef MATRIX_ACTIVATION_RAND_VALUE
 #ifdef MATRIX_ACTIVATION_RAND_RATE
-			if(rand_float() > MATRIX_ACTIVATION_RAND_RATE)
+			if(rand_float() < MATRIX_ACTIVATION_RAND_RATE)
 				MATRIX_SHIFT(m,y,x) += 2*rand_float() * (float)MATRIX_ACTIVATION_RAND_VALUE - (float)MATRIX_ACTIVATION_RAND_VALUE;
 #endif
 #endif
@@ -271,14 +276,14 @@ static inline void matrix_softmax(Mat m) {
 	double sum = 0.0f;
 	for(size_t y = 0; y < m.rows; y++) {
 		for(size_t x = 0; x < m.cols; x++) {
-			sum+=exp((double)MATRIX_SHIFT(m,y,x));
+			sum+=exp((double)MATRIX_SHIFT(m,y,x) / (double) T);
 			}
 		}
 	//printf("sum = %f",sum);
 	//system("pause");
 	for(size_t y = 0; y < m.rows; y++) {
 		for(size_t x = 0; x < m.cols; x++) {
-			MATRIX_SHIFT(m,y,x) = (double)exp((double)MATRIX_SHIFT(m,y,x))/(double)sum;
+			MATRIX_SHIFT(m,y,x) = (double)exp((double)MATRIX_SHIFT(m,y,x) / (double)T)/(double)sum;
 			}
 		}
 	}
