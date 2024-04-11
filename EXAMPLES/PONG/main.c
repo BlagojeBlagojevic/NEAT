@@ -236,13 +236,7 @@ static inline void Update_Pack(PONG *p) {
 	}
 
 
-static inline void Neat_Reset_Fitnes() {
-	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
-		population[i].fitnes = 100000.0f;
-		//po
-		}
 
-	}
 
 void Main_Renderer(SDL_Renderer *r, PONG *p,int Ndisplay) {
 	SDL_RenderClear(r);
@@ -300,7 +294,7 @@ int main(void) {
 		scanf("%s",name);
 
 		}
-	Neat_Reset_Fitnes();
+	Neat_Reset_Fitnes(population);
 	size_t counter = 1;
 
 	while(1) {
@@ -328,7 +322,7 @@ int main(void) {
 			curently_alive = NUMBER_OF_SPICES;
 			neat_crossover(population);
 			printf("BEST FITNES IS %f\n",population[0].fitnes);
-			Neat_Reset_Fitnes();
+			Neat_Reset_Fitnes(population);
 			if((counter % (Niter + 1) == 0) && (choice1 == 'y')) {
 				neat_save(population,name);
 
