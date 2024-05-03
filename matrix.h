@@ -58,6 +58,7 @@ static inline void matrix_feedforward(Mat *out,Mat input, Mat *weights, Mat *bia
 static inline void matrix_reproduce(Mat a, Mat b);
 static inline void matrix_softmax(Mat m);
 static inline void matrix_copy(Mat dest, Mat src);
+static inline void matrix_convolution(Mat dest,Mat a, Mat kernel);
 
 static inline void matrix_print(Mat m,const char *name);
 static inline void matrix_print_out(Mat m, const char *name, size_t out);
@@ -295,6 +296,30 @@ static inline void matrix_copy(Mat dest, Mat src) {
 			}
 		}
 	}
+static inline void matrix_convolution(Mat dest, Mat a, Mat kernel){
+    MATRIX_ASSERT(dest.cols <= a.cols);
+    MATRIX_ASSERT(dest.rows <= a.rows);
+    
+    for (size_t y = 0; y < dest.cols; y++){
+        for (size_t x = 0; x < dest.rows; x++){
+
+            float sum = 0.0f;
+            for (size_t i = 0; i < kernel.rows; i++)
+            {
+                for (size_t j = 0; j < kernel.cols; j++)
+                {
+                    sum+=MATRIX_SHIFT(a,y+i,x+j)*MATRIX_SHIFT(kernel,i,j);
+                }
+                
+            }
+            MATRIX_SHIFT(dest,y, x) = sum;
+        }
+        
+    }
+
+}
+
+
 static inline void matrix_mutation(Mat m) {
 	for(size_t y = 0; y < m.rows; y++) {
 		for(size_t x = 0; x < m.cols; x++) {
