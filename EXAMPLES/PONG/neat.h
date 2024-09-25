@@ -1,6 +1,7 @@
 #ifndef NEAT_H
 #define NEAT_H
 #define MATRIX_IMPLEMETATION
+//#define TYPE int
 #include "matrix.h"
 #include<time.h>
 
@@ -41,22 +42,22 @@ typedef struct {
 	Mat out_softmax;
 	} NEAT;
 
-extern inline void neat_alloc(NEAT *n);
-extern inline void neat_free(NEAT *n);
-extern inline void neat_rand(NEAT *n, float low, float high);
-extern inline void neat_forward(NEAT *n,size_t Niter);
-extern inline void neat_print(NEAT *n);
-extern inline void neat_crossover(NEAT *n);
-extern inline void neat_mutation(NEAT *n);
-extern inline void neat_reproduce(NEAT *n1,NEAT *n2);
-extern inline void neat_save(NEAT *n,const char *name);
-extern inline void neat_load(NEAT *n,const char *name);
+extern inline void neat_alloc(NEAT *__restrict__ n);
+extern inline void neat_free(NEAT *__restrict__ n);
+extern inline void neat_rand(NEAT *__restrict__ n, float low, float high);
+extern inline void neat_forward(NEAT *__restrict__ n,size_t Niter);
+extern inline void neat_print(NEAT *__restrict__ n);
+extern inline void neat_crossover(NEAT *__restrict__ n);
+extern inline void neat_mutation(NEAT *__restrict__ n);
+extern inline void neat_reproduce(NEAT *__restrict__ n1,NEAT *__restrict__ n2);
+extern inline void neat_save(NEAT *__restrict__ n,const char *name);
+extern inline void neat_load(NEAT *__restrict__ n,const char *name);
 extern inline void Neat_Reset_Fitnes(NEAT *n);
 
 #endif
 
 #ifdef NEAT_IMPLEMETATION
-extern inline void neat_alloc(NEAT *n) {
+extern inline void neat_alloc(NEAT *__restrict__ n) {
 
 	//*n = (NEAT*)calloc(NUMBER_OF_SPICES, sizeof(NEAT*));
 	for(size_t i = 0; i <= NUMBER_OF_SPICES; i++) {
@@ -79,7 +80,7 @@ extern inline void neat_alloc(NEAT *n) {
 		}
 
 	}
-extern inline void neat_free(NEAT *n) {
+extern inline void neat_free(NEAT  *__restrict__ n) {
 
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		matrix_free(n[i].input);
@@ -99,7 +100,7 @@ extern inline void neat_free(NEAT *n) {
 	}
 
 
-extern inline void neat_rand(NEAT *n, float low, float high) {
+extern inline void neat_rand(NEAT *__restrict__ n, float low, float high) {
 
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		for(size_t j = 0; j < NUMBER_OF_LAYER; j++) {
@@ -110,8 +111,7 @@ extern inline void neat_rand(NEAT *n, float low, float high) {
 		}
 	}
 
-
-extern inline void neat_forward(NEAT *n,size_t Niter) {
+extern inline void neat_forward(NEAT  *__restrict__ n,size_t Niter) {
 
 
 	for(size_t i = 0; i < Niter; i++) {
@@ -127,14 +127,14 @@ extern inline void neat_forward(NEAT *n,size_t Niter) {
 		}
 	}
 
-extern inline void neat_print(NEAT *n) {
+extern inline void neat_print(NEAT *__restrict__ n) {
 
 	MATRIX_PRINT(n[0].input);
 	for(size_t j = 0; j < NUMBER_OF_SPICES; j++) {
 		system("pause");
 		printf("\n");
 		system("cls");
-		printf("\t\t\t NEAT SPICES %I64u\n",j);
+		printf("\t\t\t NEAT SPICES %d\n",(int)j);
 		printf("\n\n______________________________________________________________________________\n");
 		system("pause");
 
@@ -153,7 +153,7 @@ extern inline void neat_print(NEAT *n) {
 		}
 	}
 
-extern inline void neat_mutation(NEAT *n) {
+extern inline void neat_mutation(NEAT *__restrict__ n) {
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		for(size_t j = 0; j < NUMBER_OF_LAYER; j++) {
 			matrix_mutation(n[i].weigts[j]);
@@ -162,8 +162,7 @@ extern inline void neat_mutation(NEAT *n) {
 
 		}
 	}
-
-extern inline void neat_reproduce(NEAT *n1,NEAT *n2) {
+extern inline void neat_reproduce(NEAT *__restrict__  n1,NEAT *__restrict__ n2) {
 	for(size_t i = 0; i < NUMBER_OF_LAYER; i++) {
 		matrix_reproduce(n1[0].weigts[i],n2[0].weigts[i]);
 		matrix_reproduce(n1[0].bias[i],n2[0].bias[i]);
@@ -173,7 +172,7 @@ extern inline void neat_reproduce(NEAT *n1,NEAT *n2) {
 
 
 
-extern inline void neat_crossover(NEAT *n) {
+extern inline void neat_crossover(NEAT *__restrict__ n) {
 
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		for(size_t j = i + 1; j < NUMBER_OF_SPICES; j++) {
@@ -209,7 +208,7 @@ extern inline void neat_crossover(NEAT *n) {
 
 	}
 
-extern inline void Neat_Reset_Fitnes(NEAT *n) {
+extern inline void Neat_Reset_Fitnes(NEAT  *__restrict__ n) {
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		n[i].fitnes = 100000.0f;
 		//po
@@ -217,7 +216,7 @@ extern inline void Neat_Reset_Fitnes(NEAT *n) {
 
 	}
 
-extern inline void neat_save(NEAT *n,const char *name) {
+extern inline void neat_save(NEAT *__restrict__ n,const char *name) {
 	FILE *f = fopen(name,"wb");
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		fwrite(n[i].input.elem,sizeof(float),n[i].input.cols*n[i].input.rows,f);
@@ -233,7 +232,7 @@ extern inline void neat_save(NEAT *n,const char *name) {
 	}
 
 
-extern inline void neat_load(NEAT *n,const char *name) {
+extern inline void neat_load(NEAT *__restrict__ n,const char *name) {
 	FILE *f = fopen(name,"rb");
 	for(size_t i = 0; i < NUMBER_OF_SPICES; i++) {
 		fread(n[i].input.elem,sizeof(float),n[i].input.cols*n[i].input.rows,f);
