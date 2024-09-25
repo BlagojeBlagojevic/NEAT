@@ -35,7 +35,7 @@ typedef struct {
 	size_t rows;    //NUM OF   ROWS
 	size_t cols;    //NUM OF   COLS
 	size_t stride;  //WHER TO  SPLIT
-	TYPE *elem;    //ELEMETS  IN
+	TYPE  *__restrict__ elem;    //ELEMETS  IN
 	} Mat;
 
 //UTILITY FUNCTION
@@ -98,9 +98,8 @@ extern inline void matrix_free(Mat m) {
 
 	free(m.elem);
 	}
-
-
-
+#define OPTIM_DOT
+#ifndef OPTIM_DOT
 extern inline void matrix_dot(Mat dest, Mat a, Mat b) { //a[1x2] b[2x3] c[1x3]
 	MATRIX_ASSERT(a.cols == b.rows);
 	MATRIX_ASSERT(dest.rows == a.rows);
@@ -116,6 +115,34 @@ extern inline void matrix_dot(Mat dest, Mat a, Mat b) { //a[1x2] b[2x3] c[1x3]
 		}
 
 	}
+	
+#endif
+#ifdef OPTIM_DOT
+extern inline void matrix_dot(Mat  dest, const Mat a, const Mat b) { //a[1x2] b[2x3] c[1x3]
+	MATRIX_ASSERT(a.cols == b.rows);
+	MATRIX_ASSERT(dest.rows == a.rows);
+	MATRIX_ASSERT(dest.cols == b.cols);
+
+	Mat b_T = matrix_alloc(b.cols, b.rows);
+	//Transpose matrix b
+	for(size_t y = 0; y < b_T.rows; y++) {
+		for(size_t x = 0; x < b_T.cols; x++) {
+			MATRIX_SHIFT(b_T, y, x) = MATRIX_SHIFT(b, x, y);
+			}
+		}
+	//Multiplay matrix with transposed
+	for(size_t y = 0; y < dest.rows; y++) {
+		for(size_t x = 0; x < dest.cols; x++) {
+			MATRIX_SHIFT(dest, y, x) = 0;
+			for(size_t i = 0; i < a.cols; i++) {
+				MATRIX_SHIFT(dest, y, x) += MATRIX_SHIFT(a, y, i) * MATRIX_SHIFT(b_T, x, i);
+				}
+			}
+		}
+	matrix_free(b_T);
+}
+#endif	
+	
 extern inline void matrix_sum(Mat dest, Mat a) {
 	MATRIX_ASSERT(dest.cols == a.cols);
 	MATRIX_ASSERT(dest.rows == a.rows);
@@ -319,7 +346,6 @@ extern inline void matrix_convolution(Mat dest, Mat a, Mat kernel){
     }
 
 }
-
 
 extern inline void matrix_mutation(Mat m) {
 	for(size_t y = 0; y < m.rows; y++) {
